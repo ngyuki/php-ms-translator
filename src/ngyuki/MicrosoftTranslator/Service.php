@@ -4,6 +4,8 @@ namespace ngyuki\MicrosoftTranslator;
 use ngyuki\MicrosoftTranslator\TokenStorage\TokenStorageInterface;
 use ngyuki\MicrosoftTranslator\HttpAdapter\HttpAdapterInterface;
 
+use RuntimeException;
+
 class Service
 {
     private $_adapter;
@@ -56,7 +58,7 @@ class Service
         return $ret;
     }
 
-    public function _post($url, $params, array $headers = array())
+    private function _post($url, $params, array $headers = array())
     {
         $ret = $this->_adapter->post($url, $params, $headers);
         $ret = $this->_stripBom($ret);
@@ -86,6 +88,12 @@ class Service
         {
             $now = time();
             $token = $this->_getAccessToken();
+
+            if (!isset($token->access_token) || !isset($token->expires_in))
+            {
+                throw new RuntimeException("returned invalid access token.");
+            }
+
             $this->_storage->save($token->access_token, $token->expires_in + $now);
 
             $access_token = $token->access_token;

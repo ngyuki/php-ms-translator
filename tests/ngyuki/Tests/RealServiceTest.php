@@ -12,30 +12,30 @@ use ngyuki\MicrosoftTranslator\TokenStorage\DummyTokenStorage;
  */
 class RealServiceTest extends \PHPUnit_Framework_TestCase
 {
-    private static $storage;
-    private $adapter;
     private $service;
-
-    public static function setUpBeforeClass()
-    {
-        self::$storage = new DummyTokenStorage();
-    }
 
     protected function setUp()
     {
-        $this->adapter = new CurlHttpAdapter();
+        $clientId = getenv('PHPUNIT_CLIENT_ID');
+        $clientSecret = getenv('PHPUNIT_CLIENT_SECRET');
+
+        if ((strlen($clientId) == 0) || (strlen($clientSecret) == 0))
+        {
+            $this->markTestSkipped("unset env PHPUNIT_CLIENT_ID or PHPUNIT_CLIENT_SECRET");
+        }
+
+        $adapter = new CurlHttpAdapter();
 
         $proxy = getenv('PHPUNIT_HTTP_PROXY');
 
         if (strlen($proxy))
         {
-            $this->adapter->setProxy($proxy);
+            $adapter->setProxy($proxy);
         }
 
-        $clientId = getenv('PHPUNIT_CLIENT_ID');
-        $clientSecret = getenv('PHPUNIT_CLIENT_SECRET');
+        $storage = new DummyTokenStorage();
 
-        $this->service = new Service($this->adapter, self::$storage, $clientId, $clientSecret);
+        $this->service = new Service($adapter, $storage, $clientId, $clientSecret);
     }
 
     /**
