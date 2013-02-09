@@ -1,11 +1,14 @@
 <?php
 namespace ngyuki\MicrosoftTranslator\HttpAdapter;
 
+use RuntimeException;
+
 class CurlHttpAdapter implements HttpAdapterInterface
 {
     private $_proxy = null;
+    private $_timeout = 10;
 
-    public function getProxy($proxy)
+    public function getProxy()
     {
         return $this->_proxy;
     }
@@ -13,6 +16,11 @@ class CurlHttpAdapter implements HttpAdapterInterface
     public function setProxy($proxy)
     {
         $this->_proxy = $proxy;
+    }
+
+    public function setTimeout($timeout)
+    {
+        $this->_timeout = $timeout;
     }
 
     public function get($url, array $params = array(), array $headers = array())
@@ -43,6 +51,9 @@ class CurlHttpAdapter implements HttpAdapterInterface
                 curl_setopt($ch, CURLOPT_PROXY, $this->_proxy);
             }
 
+            curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $this->_timeout);
+            curl_setopt($ch, CURLOPT_TIMEOUT, $this->_timeout);
+
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
             curl_setopt($ch, CURLOPT_CAINFO, dirname(__DIR__) . '/ssl/' . 'GTECyberTrustGlobalRoot.crt');
 
@@ -61,14 +72,14 @@ class CurlHttpAdapter implements HttpAdapterInterface
 
             if ($ret === false)
             {
-                throw new \UnexpectedValueException(curl_error($ch));
+                throw new RuntimeException(curl_error($ch));
             }
 
-            $errno = curl_errno($ch);
+            $status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 
-            if ($errno !== 0)
+            if ($status != 200)
             {
-                throw new \UnexpectedValueException(curl_error($ch));
+                throw new RuntimeException("http response code \"$status\"");
             }
 
             curl_close($ch);

@@ -43,7 +43,7 @@ class Service
 
             if ($errno !== JSON_ERROR_NONE)
             {
-                throw new \UnexpectedValueException("json decode error [$errno]");
+                throw new RuntimeException("json decode error [$errno]");
             }
         }
 

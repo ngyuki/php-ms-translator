@@ -4,9 +4,14 @@
     bootstrap="tests/bootstrap.php"
 >
     <php><!--
-        <env name="PHPUNIT_HTTP_PROXY" value=""/>
-        <env name="PHPUNIT_CLIENT_ID" value=""/>
-        <env name="PHPUNIT_CLIENT_SECRET" value=""/>
+        <env name="PHPUNIT_HTTP_PROXY" value="http://192.2.3.4:1"/>
+        <env name="PHPUNIT_CLIENT_ID" value="xxx"/>
+        <env name="PHPUNIT_CLIENT_SECRET" value="xxx"/>
+        
+        <env name="PHPUNIT_URL_GET_OK" value="http://example.jp/" />
+        <env name="PHPUNIT_URL_POST_OK" value="http://example.jp/" />
+        <env name="PHPUNIT_URL_NOTFOUND" value="http://example.jp/"/>
+        <env name="PHPUNIT_INVALID_PROXY" value="http://192.2.3.4:1"/>
     --></php>
     
     <testsuites>
