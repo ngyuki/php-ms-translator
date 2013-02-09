@@ -1,0 +1,22 @@
+{
+    "name": "ngyuki/php-ms-translator",
+    "type": "library",
+    "description": "php-ms-translator",
+    "keywords": [],
+    "homepage": "https://github.com/ngyuki/php-ms-translator",
+    "license": "MIT",
+    "authors": [
+        { "name": "tsyk goto", "email": "ngyuki.ts@gmail.com" }
+    ],
+    "repositories": [
+        { "packagist": false }
+    ],
+    "require": {
+        "php": ">=5.3.3"
+    },
+    "autoload": {
+        "psr-0": {
+            "ngyuki\\MicrosoftTranslator": "src/"
+        }
+    }
+}
